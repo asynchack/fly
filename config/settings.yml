@@ -1,0 +1,48 @@
+settings:
+  # 程序运行相关配置，app本身、数据库的、日志的、外部组件比如es的、认证jwt的、云同步sync的等
+  application:
+    mode: dev
+    host: 0.0.0.0
+    name: flyApp
+    port: 8000
+    readtimeout: 1
+    writertimeout: 2
+    enableldap: false
+  logger:
+    path: temp/logs
+    stdout: true
+    level: all
+    enabledbus: true
+    enabledreq: false
+    # 数据库日志开关，dev模式下开启
+    enableddb: false
+    # 自动任务日志，dev模式下开启
+    enabledjob: false
+  jwt:
+    secret: fly
+    timeout: 3600
+  database:
+    driver: mysql
+    source: fly:fly@tcp(172.16.80.9:3306)/fly?charset=utf8mb4&parseTime=True&loc=Local&timeout=1000ms
+  gen:
+    #代码生成读取的数据库名称
+    dbname: fly
+    # 前端代码存放位置
+    frontpath: ../fly-ui/dist
+  sync:
+    cloud: 5
+  es:
+    enabled: false
+    host: http://127.0.0.1:9200
+    user:
+    password:
+    index: cmdb_resource_data
+  ssl:
+    # https对应的域名
+    domain: localhost:8000
+    # https开关
+    enable: false
+    # ssl 证书key
+    key: keystring
+    # ssl 证书路径
+    pem: temp/pem.pem
