@@ -1,11 +1,16 @@
 package migrate
 
 import (
+	"fly/cmd/migrate/migration"
 	"fly/common/database"
 	"fly/common/global"
+	"fly/common/models"
 	"fly/tools"
 	"fly/tools/config"
 	"fmt"
+
+	_ "fly/cmd/migrate/migration/version"
+	_ "fly/cmd/migrate/migration/version-local"
 
 	"github.com/spf13/cobra"
 )
@@ -43,8 +48,6 @@ func initDatabase() {
 		initDB()
 
 		fmt.Println(global.DB.Config)
-		// 3、迁移数据库
-		modelMigrate()
 	} else {
 		genFile()
 	}
@@ -63,17 +66,25 @@ func initDB() {
 
 	fmt.Println(tools.Yellow("开始migrate所有模型"))
 
-	modelMigrate()
+	_ = modelMigrate()
 
 	fmt.Println(tools.Yellow("migreate所有表完成"))
 
 }
 
-func modelMigrate() {
+func modelMigrate() error {
 	// 先前一个Migration表，该表记录，每个表（模型）是否迁移，以及迁移apply的时间是多少
 	// 首先利用Debug（）方法，获得一个开启了debug日志级别的Session，Session也是*gorm.DB的类型（是它的子集？） 2者关系？
 	// 在这个session中进行migrate，应该是仅仅该session上迁移的表，获得更详细的日志 ，日志输出？
-	global.DB.Debug().AutoMigrate()
+
+	err := global.DB.Debug().AutoMigrate(&models.Migration{}) // 先创建一张表，用于记录迁移中所有表，以及表的apply时间
+	if err != nil {
+		return err
+	}
+
+	migration.MigrateInstance.SetDB(global.DB)
+	migration.MigrateInstance.Migrate()
+	return nil
 }
 
 func genFile() {
