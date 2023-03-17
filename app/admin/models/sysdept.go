@@ -27,6 +27,7 @@ type SysDept struct {
 	CreateBy string    `json:"createBy" gorm:"size: 128"`
 	UpdateBy string    `json:"updateBy" gorm:"size:128"`
 	Children []SysDept `json:"children" gorm:"-"`
+	Sort     int       `json:"sort" gorm:""` //排序
 
 	DeptPath string `json:"deptPath" gorm:"size:255;"` //
 	Status   string `json:"status" gorm:"size:4;"`     //状态

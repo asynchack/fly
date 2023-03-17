@@ -23,7 +23,9 @@ settings:
     timeout: 3600
   database:
     driver: mysql
-    source: fly:fly@tcp(172.16.80.9:3306)/fly?charset=utf8mb4&parseTime=True&loc=Local&timeout=1000ms
+    source:
+      fly:fly@tcp(127.0.0.1:3306)/fly?charset=utf8mb4&parseTime=True&loc=Local&timeout=1000ms
+      # source: fly:fly@tcp(172.16.80.9:3306)/fly?charset=utf8mb4&parseTime=True&loc=Local&timeout=1000ms
   gen:
     #代码生成读取的数据库名称
     dbname: fly
